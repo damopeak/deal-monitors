@@ -1,0 +1,518 @@
+keepa_api_key: ""          # set KEEPA_API_KEY in .env
+discord_webhook_url: ""    # set DISCORD_WEBHOOK_URL in .env
+
+# Brand / product-level discounts applied on top of any category discount.
+# match: single substring that must appear in title (case-insensitive)
+# matches: list of substrings that ALL must appear in title (case-insensitive)
+# type: "percent" (of raw supplier price) or "fixed" (£ amount)
+# value: discount amount
+# min_price: (optional) only apply if raw supplier price >= this value
+brand_discounts:
+  - match: "Logitech"
+    type: percent
+    value: 20
+  - match: "Dyson"
+    type: percent
+    value: 10
+  - matches: ["gaming", "laptop"]
+    type: fixed
+    value: 100
+    min_price: 799
+
+scraper:
+  max_pages_per_category: 1
+  request_delay_seconds: 4
+  proxy:
+    server: "http://PROXY_HOST:PORT"   # placeholder = proxy disabled; set PROXY_SERVER in .env
+    username: ""   # set PROXY_USERNAME in .env
+    password: ""   # set PROXY_PASSWORD in .env
+
+keepa:
+  max_lookups_per_run: 500
+  domain: "GB"
+
+roi:
+  min_roi_percent: 15
+  referral_fee_percent: 15
+  vat_registered: true
+  vat_rate: 20
+  digital_services_fee_percent: 2
+  prep_fee_per_unit: 0.50
+
+sites:
+  - name: "PerfumesClub"
+    base_url: "https://www.perfumesclub.co.uk"
+    scrape_mode: "product_pages"
+    use_proxy: false
+    categories:
+      - name: "Chanel"
+        url: "https://www.perfumesclub.co.uk/en/chanel/m/"
+        referral_fee_percent: 15   # Beauty: 8% ≤£10, 15% >£10 — all Chanel is >£10
+    selectors:
+      product_links: "a[href*='/p_']"
+      load_more: "a:has-text('SEE MORE ITEMS'), button:has-text('SEE MORE ITEMS')"
+
+  - name: "Currys"
+    enabled: false
+    base_url: "https://www.currys.co.uk"
+    categories:
+
+      # ------------------------------------------------------------------ #
+      # APPLIANCES — Small Kitchen (15% referral)
+      # ------------------------------------------------------------------ #
+      - name: "Microwaves"
+        url: "https://www.currys.co.uk/appliances/microwaves/microwaves"
+        referral_fee_percent: 15
+      - name: "Coffee Machines"
+        url: "https://www.currys.co.uk/appliances/coffee-machines/coffee-machines"
+        referral_fee_percent: 15
+      - name: "Air Fryers"
+        url: "https://www.currys.co.uk/appliances/small-kitchen-appliances/health-fryers/air-fryers"
+        referral_fee_percent: 15
+      - name: "Blenders"
+        url: "https://www.currys.co.uk/appliances/small-kitchen-appliances/juicers-and-blenders/blenders"
+        referral_fee_percent: 15
+      - name: "Kettles"
+        url: "https://www.currys.co.uk/appliances/small-kitchen-appliances/kettles"
+        referral_fee_percent: 15
+      - name: "Slow Cookers"
+        url: "https://www.currys.co.uk/appliances/small-kitchen-appliances/slow-cookers"
+        referral_fee_percent: 15
+      - name: "Toasters"
+        url: "https://www.currys.co.uk/appliances/small-kitchen-appliances/toasters"
+        referral_fee_percent: 15
+      - name: "Sparkling Water Makers"
+        url: "https://www.currys.co.uk/appliances/small-kitchen-appliances/drink-makers/sparkling-water-makers"
+        referral_fee_percent: 15
+      - name: "Irons"
+        url: "https://www.currys.co.uk/appliances/ironing/irons"
+        referral_fee_percent: 15
+
+      # ------------------------------------------------------------------ #
+      # APPLIANCES — Floorcare (15% referral; 10% off Dyson — brand filter TBD)
+      # ------------------------------------------------------------------ #
+      - name: "Vacuum Cleaners"
+        url: "https://www.currys.co.uk/appliances/floorcare/vacuum-cleaners"
+        referral_fee_percent: 15
+        # NOTE: Dyson products in this category have a 10% discount
+        # Brand-level discount filtering is not yet implemented
+
+      # ------------------------------------------------------------------ #
+      # APPLIANCES — Large / Built-in (8% referral)
+      # ------------------------------------------------------------------ #
+      - name: "Hobs Built-in"
+        url: "https://www.currys.co.uk/appliances/cooking/hobs-built-in"
+        referral_fee_percent: 8
+
+      # ------------------------------------------------------------------ #
+      # APPLIANCES — Climate & Air Treatment (15% referral)
+      # ------------------------------------------------------------------ #
+      - name: "Dehumidifiers"
+        url: "https://www.currys.co.uk/appliances/fans-heating-and-air-treatment/dehumidifiers"
+        referral_fee_percent: 15
+      - name: "Electric Blankets"
+        url: "https://www.currys.co.uk/appliances/fans-heating-and-air-treatment/electric-blankets"
+        referral_fee_percent: 15
+      - name: "Heaters"
+        url: "https://www.currys.co.uk/appliances/fans-heating-and-air-treatment/heating-and-cooling/heaters"
+        referral_fee_percent: 15
+      - name: "Air Conditioners"
+        url: "https://www.currys.co.uk/appliances/fans-heating-and-air-treatment/heating-and-cooling/air-conditioners"
+        referral_fee_percent: 15
+      - name: "Fans"
+        url: "https://www.currys.co.uk/appliances/fans-heating-and-air-treatment/heating-and-cooling/fans"
+        referral_fee_percent: 15
+      - name: "Air Purifiers"
+        url: "https://www.currys.co.uk/appliances/fans-heating-and-air-treatment/air-purifiers"
+        referral_fee_percent: 15
+
+      # ------------------------------------------------------------------ #
+      # HOME & OUTDOOR — Cooking & Baking (15% referral)
+      # ------------------------------------------------------------------ #
+      - name: "Home Cooking"
+        url: "https://www.currys.co.uk/home-and-outdoor/cooking-and-baking/cooking"
+        referral_fee_percent: 15
+      - name: "Home Baking"
+        url: "https://www.currys.co.uk/home-and-outdoor/cooking-and-baking/baking"
+        referral_fee_percent: 15
+      - name: "Food & Drink Storage"
+        url: "https://www.currys.co.uk/home-and-outdoor/cooking-and-baking/food-and-drink-storage"
+        referral_fee_percent: 15
+
+      # ------------------------------------------------------------------ #
+      # TV & AUDIO — Electronics (tiered: 15% up to £100, 8% above)
+      # ------------------------------------------------------------------ #
+      - name: "Televisions"
+        url: "https://www.currys.co.uk/tv-and-audio/televisions/tvs"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+      - name: "Sound Bars"
+        url: "https://www.currys.co.uk/tv-and-audio/dvd-blu-ray-and-home-cinema/home-cinema-systems-and-soundbars/sound-bars"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+      - name: "Home Cinema Systems"
+        url: "https://www.currys.co.uk/tv-and-audio/dvd-blu-ray-and-home-cinema/home-cinema-systems-and-soundbars/home-cinema-systems"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+      - name: "Blu-ray & DVD Players"
+        url: "https://www.currys.co.uk/tv-and-audio/dvd-blu-ray-and-home-cinema/blu-ray-and-dvd-players"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+      - name: "Speakers"
+        url: "https://www.currys.co.uk/tv-and-audio/speakers-and-hi-fi-systems/speakers"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+      - name: "Headphones"
+        url: "https://www.currys.co.uk/tv-and-audio/headphones/headphones"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+      - name: "Radios"
+        url: "https://www.currys.co.uk/tv-and-audio/radios/radios"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+      - name: "MP3 Players"
+        url: "https://www.currys.co.uk/tv-and-audio/mp3-and-cd-players/mp3-and-multimedia-players/mp3-players"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+      - name: "Personal CD Players"
+        url: "https://www.currys.co.uk/tv-and-audio/mp3-and-cd-players/personal-cd-players"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+      - name: "Audio Accessories"
+        url: "https://www.currys.co.uk/tv-and-audio/audio-accessories-and-cables/audio-accessories"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+
+      # ------------------------------------------------------------------ #
+      # TV & AUDIO — TV Accessories (tiered: 15% up to £100, 8% above)
+      # ------------------------------------------------------------------ #
+      - name: "Remote Controls"
+        url: "https://www.currys.co.uk/tv-and-audio/tv-accessories/remote-controls"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+      - name: "TV Adapters & Splitters"
+        url: "https://www.currys.co.uk/tv-and-audio/tv-accessories/cables-and-accessories/adapters-and-splitters"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+      - name: "TV Stands"
+        url: "https://www.currys.co.uk/tv-and-audio/tv-accessories/tv-stands"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+      - name: "TV Wall Brackets"
+        url: "https://www.currys.co.uk/tv-and-audio/tv-accessories/tv-wall-brackets"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+      - name: "Indoor TV Aerials"
+        url: "https://www.currys.co.uk/tv-and-audio/tv-accessories/tv-aerials/indoor-tv-aerials"
+        referral_fee_tiers:
+          - up_to: 100
+            rate: 15
+          - rate: 8
+
+      # ------------------------------------------------------------------ #
+      # COMPUTING — Laptops (7% referral)
+      # ------------------------------------------------------------------ #
+      - name: "Windows Laptops"
+        url: "https://www.currys.co.uk/computing/laptops/laptops/windows-laptops"
+        referral_fee_percent: 7
+        discount: 100                    # £100 off promotion
+
+      - name: "Windows Laptop Deal (15% off)"
+        url: "https://www.currys.co.uk/deals-on-computing/windows-laptop-deal"
+        referral_fee_percent: 7
+        discount_percent: 15             # 15% off promotion page — verified 51 products
+
+      - name: "Mobile Phones"
+        url: "https://www.currys.co.uk/phones/mobile-phones/mobile-phones"
+        referral_fee_percent: 8          # Amazon "Cell Phones & Accessories" rate
+                                         # verified 377 products
+      - name: "Laptops"
+        url: "https://www.currys.co.uk/computing/laptops/laptops"
+        referral_fee_percent: 7
+
+      # ------------------------------------------------------------------ #
+      # COMPUTING — Peripherals & Accessories (7% referral)
+      # NOTE: Logitech products have 20% off — brand filter not yet implemented
+      # ------------------------------------------------------------------ #
+      - name: "Tablets"
+        url: "https://www.currys.co.uk/computing/ipad-tablets-and-ereaders/tablets"
+        referral_fee_percent: 7
+      - name: "PC Monitors"
+        url: "https://www.currys.co.uk/computing/computer-monitors/pc-monitors"
+        referral_fee_percent: 7
+      - name: "Printers"
+        url: "https://www.currys.co.uk/computing/printers-scanners-and-ink/printers"
+        referral_fee_percent: 7
+      - name: "Projectors"
+        url: "https://www.currys.co.uk/computing/projectors/projectors"
+        referral_fee_percent: 7
+      - name: "Whole Home Wi-Fi"
+        url: "https://www.currys.co.uk/computing/networking/whole-home-wi-fi-systems"
+        referral_fee_percent: 7
+      - name: "Headsets & Microphones"
+        url: "https://www.currys.co.uk/computing/computer-accessories/headsets-and-microphones"
+        referral_fee_percent: 7
+      - name: "Keyboards"
+        url: "https://www.currys.co.uk/computing/computer-accessories/keyboard"
+        referral_fee_percent: 7
+      - name: "Mice"
+        url: "https://www.currys.co.uk/computing/computer-accessories/mice"
+        referral_fee_percent: 7
+      - name: "PC Speakers"
+        url: "https://www.currys.co.uk/computing/computer-accessories/pc-speakers"
+        referral_fee_percent: 7
+      - name: "Webcams"
+        url: "https://www.currys.co.uk/computing/computer-accessories/webcams"
+        referral_fee_percent: 7
+      - name: "Tablet Cases & Keyboards"
+        url: "https://www.currys.co.uk/computing/computer-accessories/tablet-cases-and-keyboards"
+        referral_fee_percent: 7
+      - name: "Laptop & Monitor Stands"
+        url: "https://www.currys.co.uk/computing/computer-accessories/laptop-and-monitor-stands"
+        referral_fee_percent: 7
+      - name: "Laptop Bags & Cases"
+        url: "https://www.currys.co.uk/computing/laptop-bags-and-cases/laptop-bags-and-cases"
+        referral_fee_percent: 7
+
+      # ------------------------------------------------------------------ #
+      # COMPUTING — Storage (7% referral)
+      # ------------------------------------------------------------------ #
+      - name: "Portable Hard Drives"
+        url: "https://www.currys.co.uk/computing/data-storage/external-hard-drives/portable-hard-drives"
+        referral_fee_percent: 7
+      - name: "Desktop Hard Drives"
+        url: "https://www.currys.co.uk/computing/data-storage/external-hard-drives/desktop-hard-drives"
+        referral_fee_percent: 7
+      - name: "Solid State Drives"
+        url: "https://www.currys.co.uk/computing/data-storage/solid-state-hard-drives"
+        referral_fee_percent: 7
+      - name: "Network Hard Drives (NAS)"
+        url: "https://www.currys.co.uk/computing/data-storage/external-hard-drives/network-hard-drives"
+        referral_fee_percent: 7
+      - name: "Internal SSDs"
+        url: "https://www.currys.co.uk/computing/data-storage/solid-state-hard-drives/internal-ssd"
+        referral_fee_percent: 7
+      - name: "USB Flash Drives"
+        url: "https://www.currys.co.uk/computing/data-storage/usb-flash-drives"
+        referral_fee_percent: 7
+
+      # ------------------------------------------------------------------ #
+      # COMPUTING — Components (7% referral)
+      # ------------------------------------------------------------------ #
+      - name: "Processors (CPUs)"
+        url: "https://www.currys.co.uk/computing/components-and-upgrades/processors"
+        referral_fee_percent: 7
+      - name: "Motherboards"
+        url: "https://www.currys.co.uk/computing/components-and-upgrades/motherboards"
+        referral_fee_percent: 7
+      - name: "Graphics Cards"
+        url: "https://www.currys.co.uk/computing/components-and-upgrades/graphics-cards"
+        referral_fee_percent: 7
+      - name: "Computer Memory (RAM)"
+        url: "https://www.currys.co.uk/computing/components-and-upgrades/computer-memory"
+        referral_fee_percent: 7
+
+      # ------------------------------------------------------------------ #
+      # COMPUTING — Office Supplies (7% referral)
+      # ------------------------------------------------------------------ #
+      - name: "Labelling Machines"
+        url: "https://www.currys.co.uk/computing/office-supplies/labelling-machines"
+        referral_fee_percent: 7
+      - name: "Shredders"
+        url: "https://www.currys.co.uk/computing/office-supplies/shredders"
+        referral_fee_percent: 7
+      - name: "Laminators"
+        url: "https://www.currys.co.uk/computing/office-supplies/laminators"
+        referral_fee_percent: 7
+
+      # ------------------------------------------------------------------ #
+      # GAMING — Accessories (7% referral)
+      # ------------------------------------------------------------------ #
+      - name: "Gaming Mice"
+        url: "https://www.currys.co.uk/gaming/gaming-accessories/mice"
+        referral_fee_percent: 7
+      - name: "Gaming Mouse Mats"
+        url: "https://www.currys.co.uk/gaming/gaming-accessories/mice/mouse-surfaces"
+        referral_fee_percent: 7
+      - name: "Gaming Headsets"
+        url: "https://www.currys.co.uk/gaming/gaming-accessories/headsets"
+        referral_fee_percent: 7
+      - name: "Gaming Steering Wheels"
+        url: "https://www.currys.co.uk/gaming/controllers/controllers/gaming-steering-wheels"
+        referral_fee_percent: 7
+
+      # ------------------------------------------------------------------ #
+      # HEALTH & BEAUTY (15% referral)
+      # ------------------------------------------------------------------ #
+      - name: "Hair Dryers"
+        url: "https://www.currys.co.uk/health-and-beauty/haircare/hair-dryers"
+        referral_fee_percent: 15
+      - name: "Hair Straighteners"
+        url: "https://www.currys.co.uk/health-and-beauty/haircare/hair-straighteners"
+        referral_fee_percent: 15
+      - name: "Electric Toothbrushes"
+        url: "https://www.currys.co.uk/health-and-beauty/dental-care/electric-toothbrushes"
+        referral_fee_percent: 15
+      - name: "Beard Trimmers"
+        url: "https://www.currys.co.uk/health-and-beauty/mens-shaving-and-grooming/mens-trimmers-and-grooming-tools/beard-and-stubble-trimmers"
+        referral_fee_percent: 15
+      - name: "Epilators"
+        url: "https://www.currys.co.uk/health-and-beauty/ladies-hair-removal/epilators"
+        referral_fee_percent: 15
+
+    selectors:
+      product_links: "a.pdpLink"
+      title: "h1.product-name"
+      price: "span.value"
+      next_page: "a.page-next"
+
+arbisource:
+  watch_unmatched: false      # matched feed only; unmatched is a firehose
+  vat_registered: true        # uses ArbiSource's VAT-adjusted profit figures
+  ping_on_elite: true         # @here for score >= 75
+  wide_feed: true               # bypass ArbiSource's own pre-filter; our gates do the judging
+  costs:
+    inbound_shipping_cost: 0      # ArbiSource charges this PER KG — left at 0 on purpose
+    storage_months: 0
+  filter:
+    inbound_per_unit: 1.00    # flat £/unit inbound shipping, deducted locally
+    min_roi: 20.0             # % at the 90-day average selling price, not spot
+    min_profit: 4.00          # £ at the 90-day average
+    min_profit_spot: 2.00     # £ at today's price
+    max_cost: 250.0
+    max_bsr_percent: 1.0
+    min_rank_drops_30: 15     # per variation
+    max_sellers: 25
+    min_confidence: 0.85
+    max_keepa_age_days: 120
+    spike_tolerance: 1.20     # reject if current price >20% above 90d average
+    decline_tolerance: 0.90   # reject if 30d average <90% of 90d average
+    require_in_stock: false   # out-of-stock drops pass through, flagged + penalised
+    require_green_ip: false   # IP-flagged drops pass through, flagged + penalised
+    penalty_out_of_stock: 15.0   # score penalty; set 0 to rank them like any other
+    penalty_ip_flag: 0.0       # not penalised — IP flags are judged manually
+    suspect_discount: 80.0          # % off at which a drop is treated as a likely mis-scrape
+    suspect_discount_blocks_ping: true   # such drops post, but never fire an @here
+    excluded_categories:
+      - Large Appliances
+      - PC & Video Games
+      - Video Games
+      - CDs & Vinyl
+      - Music
+      - DVD & Blu-ray
+      - Movies & TV
+    excluded_keywords:              # big electricals + games/discs
+      - fridge
+      - freezer
+      - dishwasher
+      - washing machine
+      - washer dryer
+      - tumble dryer
+      - range cooker
+      - cooker hood
+      - extractor hood
+      - electric hob
+      - gas hob
+      - induction hob
+      - built-in oven
+      - electric cooker
+      - gas cooker
+      - chest freezer
+      - playstation
+      - xbox
+      - nintendo switch
+      - ps5
+      - ps4
+      - blu-ray
+      - dvd
+    category_allow_keywords:        # rescued from an excluded category (accessories, not games)
+      - keyboard
+      - mouse
+      - headset
+      - headphones
+      - controller
+      - monitor
+      - webcam
+      - microphone
+      - chair
+      - ssd
+      - hard drive
+      - graphics card
+      - cable
+      - hub
+      - dock
+      - speaker
+      - router
+    exclude_hazmat: false      # DG-flagged tools pass through, flagged + penalised
+    penalty_hazmat: 0.0        # account has dangerous-goods approval — no penalty
+    hard_max_bsr_percent: 5.0  # absolute BSR ceiling; max_bsr_percent only binds if slow
+    exclude_oversized: false
+    exclude_amazon_on_listing: true
+    tier_elite: 65
+    tier_strong: 35
+
+currys:
+  # Currently the same channel as argos: below — Currys deals post as
+  # "Currys Monitor" so the two are distinguishable.
+  webhook_url: ""   # set in .env (see .env.example)
+
+hukd:
+  webhook_url: ""   # set in .env (see .env.example)
+  interval: 300        # seconds between checks
+  min_roi: 20          # % on cash paid
+  min_profit: 3.0      # GBP per unit
+  min_monthly_sales: 10
+
+argos:
+  webhook_url: ""   # set in .env (see .env.example)
+  poll_minutes: 5          # price-drop feed check
+  scan_interval_hours: 3   # full Argos scan via ArbiSource
+  min_roi_cash: 20.0       # % of price paid inc VAT, after the Keepa re-check
+  min_profit_now: 2.0      # GBP per unit, VAT-registered (today and at the 90d avg)
+  filter:                  # Argos-only overrides on top of arbisource: filter
+    min_rank_drops_30: 8               # rank drops in 30 days...
+    divide_drops_by_variations: false  # ...across the whole listing
+    spike_tolerance: 99                # Amazon above its 90d avg is fine...
+    min_profit: 2.0                    # ...if it still makes £2 and 20% ROI at the 90d avg
+    exclude_amazon_on_listing: false   # Amazon on the listing is fine, shared Buy Box or not
+
+tkmaxx:
+  webhook_url: ""   # set in .env (see .env.example)
+  poll_minutes: 5          # price-drop feed check
+  scan_interval_hours: 3   # full TK Maxx scan via ArbiSource
+  min_roi_cash: 20.0       # same gates as argos:
+  min_profit_now: 2.0
+  filter:                  # same overrides as argos: filter
+    min_rank_drops_30: 8
+    divide_drops_by_variations: false
+    spike_tolerance: 99
+    min_profit: 2.0
+    exclude_amazon_on_listing: false
