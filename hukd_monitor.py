@@ -4,7 +4,7 @@ HotUKDeals -> Discord deal feed.
 Every ~5 minutes, reads https://www.hotukdeals.com/hot (deals in the order they
 turned hot, ~100 degrees) and posts each one to Discord, once, as it turns
 hot: title, price, shop, voucher code, heat and a link. Only food and drink,
-clothing, used/refurbished, digital items, travel and services are left out,
+clothing, used/refurbished, digital items, travel and services are left out
 and the filters are deliberately narrow: when in doubt, the deal is sent.
 In-store deals are included and labelled.
 

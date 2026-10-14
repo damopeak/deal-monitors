@@ -1,7 +1,7 @@
 """End-to-end test of currys_monitor on a small category subset.
 
 Verifies: cold start spends no tokens, prices are recorded, a price drop is
-detected on the next sweep, and the token budget gate behaves. Spends no Keepa
+detected on the next sweep and the token budget gate behaves. Spends no Keepa
 tokens and posts nothing to Discord.
 """
 import json

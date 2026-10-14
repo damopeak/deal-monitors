@@ -1,7 +1,7 @@
 """Scheduled ArbiSource store scanning.
 
 ArbiSource has no scheduled-scan feature of its own — the store scan builder offers
-only Store Cache / Amazon Cache / Filters / Exclude / START SCAN, and the create
+only Store Cache / Amazon Cache / Filters / Exclude / START SCAN and the create
 payload hardcodes isAutoScan:false. So the cycle is driven from here.
 
 Every run: check the queue has room, start a scan per store covering ALL categories

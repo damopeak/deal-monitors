@@ -76,7 +76,7 @@ BACKFILL_MIN_PRICE = 15.0  # below this, 18% ROI AND £2 profit is near-impossib
                            # FBA fees + £0.50 prep, so the token is wasted
 BACKFILL_BAND = (20.0, 120.0)  # checked FIRST. Highest-price-first was tried on 27 Sep and
                            # returned 0 alerts from 200 products: clearing 18% ROI on a £900
-                           # TV needs £162 profit, which effectively never happens, and
+                           # TV needs £162 profit, which effectively never happens and
                            # high-value electronics are often gated. This band is where OA
                            # margins actually sit. Everything above MIN_PRICE still gets
                            # checked eventually — the band just goes first.
@@ -500,7 +500,7 @@ def backfill(config: dict, keepa: KeepaClient, notifier: DiscordNotifier,
 
     EAN-only at 1 token each — title fallback (~16) is affordable for a specific
     price drop but not across ~9,500 products. Highest price first: a token spent
-    on a £400 TV is far likelier to return a lead than one spent on a £15 kettle,
+    on a £400 TV is far likelier to return a lead than one spent on a £15 kettle
     and this ordering surfaces the real finds in the first days rather than weeks.
     Self-limiting: once the catalogue is covered there is nothing left to check and
     the whole budget reverts to drops.
@@ -521,7 +521,7 @@ def backfill(config: dict, keepa: KeepaClient, notifier: DiscordNotifier,
         return 0
 
     # Sweet-spot band first, cheapest within it: a given absolute margin is a much
-    # bigger ROI% on a £30 item than a £300 one, and mid-priced goods are less often
+    # bigger ROI% on a £30 item than a £300 one and mid-priced goods are less often
     # gated. Anything outside the band is still checked, just later.
     lo, hi = BACKFILL_BAND
     todo.sort(key=lambda p: (0 if lo <= p['price'] <= hi else 1, p['price']))

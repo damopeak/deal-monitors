@@ -6,7 +6,7 @@ worth a Discord ping.
 
 The central idea: a price drop's headline ROI is computed against the *current*
 Amazon price, which is often a spike. What matters is whether the deal still works
-at the price the listing actually trades at, and whether the item sells at all.
+at the price the listing actually trades at and whether the item sells at all.
 So every judgement here is made against the 90-day average selling price and the
 30-day rank-drop history, not the spot figures.
 """
@@ -35,7 +35,7 @@ DEFAULTS = {
     "decline_tolerance": 0.90,   # 30d average must hold >=90% of the 90d average
     "require_in_stock": False,   # let these through, but flagged and score-penalised
     "require_green_ip": False,   # same — ArbiSource's IP flag is conservative
-    # Bulky white goods: not wanted, and the worst offenders for scrape errors.
+    # Bulky white goods: not wanted and the worst offenders for scrape errors.
     # Amazon's own categories do the real work here — far more reliable than keywords.
     # "Large Appliances" is white goods; the media ones cover games, CDs and DVDs.
     "excluded_categories": [
@@ -67,7 +67,7 @@ DEFAULTS = {
     # A price that collapses this far in one step is usually a mis-scrape, not a deal.
     "suspect_discount": 80.0,
     "suspect_discount_blocks_ping": True,
-    # Power tools and anything with a lithium cell get flagged as dangerous goods, and
+    # Power tools and anything with a lithium cell get flagged as dangerous goods and
     # some of the best tool margins sit there. Flagged and penalised, not binned.
     "exclude_hazmat": False,
     "penalty_hazmat": 0.0,

@@ -1,6 +1,6 @@
 """
 Quick test: scrapes the first product from PerfumesClub Chanel listing
-and prints title, price, and EAN. Run with: python test_perfumesclub.py
+and prints title, price and EAN. Run with: python test_perfumesclub.py
 """
 import asyncio
 import logging

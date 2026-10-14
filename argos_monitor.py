@@ -75,7 +75,7 @@ DEFAULTS = {
     'poll_minutes': 5,             # how often the price-drop feed is checked
     'scan_interval_hours': 6,      # how often a full Argos scan is started
     # Full departments. The "c-" categories in ArbiSource look like clearance subsets
-    # of these, and Clothing is left out on purpose.
+    # of these and Clothing is left out on purpose.
     'scan_categories': [
         'Technology', 'Home & Furniture', 'Toys', 'Sports & Leisure', 'Appliances',
         'Health & Beauty', 'Jewellery & Watches', 'Baby & Nursery', 'Garden & DIY',

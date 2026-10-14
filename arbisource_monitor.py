@@ -217,7 +217,7 @@ def build_embed(drop, verdict):
         warnings.append("⚠️ **dangerous goods** — needs DG approval for FBA")
     if drop.get("oversized"):
         warnings.append("⚠️ oversized")
-    # A near-total collapse is more often a bad scrape than a deal, and the ROI looks
+    # A near-total collapse is more often a bad scrape than a deal and the ROI looks
     # spectacular either way. Show the observed price trail so it can be judged at a glance.
     if verdict.get("suspect_price"):
         trail = " → ".join(f"£{_num(p.get('price')):.2f}"
@@ -303,7 +303,7 @@ class Monitor:
             logger.error("socket connect error: %s", data)
 
         # Both events are treated purely as "something changed" nudges — neither
-        # carries product data, and matchedPriceDrop fires rarely while
+        # carries product data and matchedPriceDrop fires rarely while
         # unmatchedPriceDrop fires constantly. What we always fetch is the
         # *matched* list, so the extra nudges only improve freshness.
         def on_drop(*args):

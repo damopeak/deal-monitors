@@ -228,10 +228,10 @@ class KeepaClient:
         def current_price(idx: int) -> Optional[float]:
             """Most recent price in £, or None if there is no LIVE offer.
 
-            Keepa records price CHANGES, and -1 means "the offer ended here". Filtering
+            Keepa records price CHANGES and -1 means "the offer ended here". Filtering
             -1 out and taking the last positive value returns whatever the price was
             before the offer stopped — potentially months stale. That bug made a
-            discontinued £159.33 Amazon offer look live when the real price was £74.99,
+            discontinued £159.33 Amazon offer look live when the real price was £74.99
             and every alert it produced was a false positive.
             """
             if idx >= len(csv) or not csv[idx]:
@@ -373,7 +373,7 @@ class KeepaClient:
 
 
 # A sale moves the rank sharply (e.g. 280k -> 60k). A listing that is NOT selling
-# still wobbles by fractions of a percent as neighbouring listings drift, and counting
+# still wobbles by fractions of a percent as neighbouring listings drift and counting
 # those as sales turned a dead TKL keyboard (276k -> 283k) into "11 sales/month".
 MIN_SALE_RANK_DROP = 0.05   # rank must improve by at least 5% to count as a sale
 
@@ -382,7 +382,7 @@ def count_rank_drops(product: dict, days: int = 30) -> Optional[int]:
     """Count sharp BSR improvements over `days` — each one implies a sale.
 
     Uses the listing's main sales rank (salesRankReference, else rootCategory), not
-    a subcategory, and ignores sub-5% wobbles that happen without any sale.
+    a subcategory and ignores sub-5% wobbles that happen without any sale.
 
     Returns None only when there is no usable sales-rank history at all, which is
     itself meaningful: a listing Keepa has never seen rank on has no evidence of
